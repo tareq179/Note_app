@@ -7,6 +7,7 @@ import NoteInputModal from '../components/NoteInputModal'
 
 const Home = ({user}) => {
   const [greet, setGreet] = useState('')
+  const [modalVisiable, setModalVisiable] = useState(false)
 
   const findGreet = ()=>{
     const hrs = new Date().getHours();
@@ -17,6 +18,10 @@ const Home = ({user}) => {
   useEffect(() => {
     findGreet();
   }, [])
+
+  const handleOnSubmit = (title, desc) =>{
+    console.log(title, desc);
+  }
   
   return (
     <>
@@ -26,10 +31,10 @@ const Home = ({user}) => {
       <SearchBar containerStyle={{marginVertical:15}}/>
       <View style={[StyleSheet.absoluteFillObject ,styles.emotyHeaderContainear]}>
         <Text style={styles.emotyHeader}>Add Node</Text>
-        <RoundIconBtn onPress={()=>console.log('amare guta marece')} antIconName='plus' style={styles.addbtn}/>
+        <RoundIconBtn onPress={()=>setModalVisiable(true)} antIconName='plus' style={styles.addbtn}/>
       </View>
       </View>
-      <NoteInputModal visible={true}/>
+      <NoteInputModal visible={modalVisiable} onClose={() => setModalVisiable(false)} onSubmit={handleOnSubmit}/>
     </>
   )
 }
