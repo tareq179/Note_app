@@ -4,12 +4,13 @@ import React, { useState } from 'react'
 import colors  from '../theme/colors'
 import RoundIconBtn from '../components/RoundIconBtn';
 
-const Intro = () => {
+const Intro = ({onFinish}) => {
   const [name, setName] = useState('');
   const hendleOnChangeText = text => setName(text);
   const hendleSubmit = async () =>{
     const user = {name:name }
-    await AsyncStorage.setItem('user', JSON.stringify(user))
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+    if(onFinish) onFinish();
   }
   return (
     <>

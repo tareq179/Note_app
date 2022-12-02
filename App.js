@@ -8,24 +8,17 @@ import Intro from './src/screens/Intro';
 export default function App() {
   const [user, setUser] = useState({})
   const findUser = async () => {
-    const result = await AsyncStorage.getItem('user')
-    setUser(JSON.parse(result));
+    const result = await AsyncStorage.getItem('user');
+    if(result !== null){
+
+      setUser(JSON.parse(result));
+    }
   }
   useEffect(() => {
-    findUser()
-  },[])
-  return (
-    <>
-      <Home user={user}/>
-    </>
-  )
-}
+    findUser();
+    // AsyncStorage.clear()
+  },[]);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  if(!user.name) return <Intro onFinish={findUser}/>
+  return <Home user={user}/>;
+}

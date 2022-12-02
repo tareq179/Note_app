@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import colors from '../theme/colors'
 import SearchBar from '../components/SearchBar'
 import RoundIconBtn from '../components/RoundIconBtn'
+import NoteInputModal from '../components/NoteInputModal'
 
 const Home = ({user}) => {
   const [greet, setGreet] = useState('')
@@ -28,6 +29,7 @@ const Home = ({user}) => {
         <RoundIconBtn onPress={()=>console.log('amare guta marece')} antIconName='plus' style={styles.addbtn}/>
       </View>
       </View>
+      <NoteInputModal visible={true}/>
     </>
   )
 }
