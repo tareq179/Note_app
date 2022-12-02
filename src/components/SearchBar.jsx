@@ -2,9 +2,9 @@ import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React from 'react'
 import colors from '../theme/colors'
 
-const SearchBar = () => {
+const SearchBar = ({containerStyle}) => {
   return (
-    <View>
+    <View style={[styles.container,{...containerStyle}]}>
       <TextInput style={styles.searchBar} placeholder='Search hear...'/>
     </View>
   )
@@ -20,5 +20,6 @@ const styles = StyleSheet.create({
         borderRadius:40,
         paddingLeft:15,
         fontSize:20
-    }
+    },
+    container:{}
 })
