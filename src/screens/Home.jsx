@@ -1,70 +1,122 @@
-import { StatusBar, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import colors from '../theme/colors'
-import SearchBar from '../components/SearchBar'
-import RoundIconBtn from '../components/RoundIconBtn'
-import NoteInputModal from '../components/NoteInputModal'
+import {
+  FlatList,
+  Keyboard,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import colors from "../theme/colors";
+import SearchBar from "../components/SearchBar";
+import RoundIconBtn from "../components/RoundIconBtn";
+import NoteInputModal from "../components/NoteInputModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Note from "../components/Note";
 
-const Home = ({user}) => {
-  const [greet, setGreet] = useState('')
-  const [modalVisiable, setModalVisiable] = useState(false)
+const Home = ({ user }) => {
+  const [greet, setGreet] = useState("");
+  const [modalVisiable, setModalVisiable] = useState(false);
+  const [notes, setNotes] = useState([]);
 
-  const findGreet = ()=>{
+  const findGreet = () => {
     const hrs = new Date().getHours();
-    if(hrs === 0 || hrs <12) return setGreet('Morning');
-    if(hrs === 1 || hrs <17) return setGreet('Afternoon');
-    setGreet('Evening');
-  }
-  useEffect(() => {
-    findGreet();
-  }, [])
+    if (hrs === 0 || hrs < 12) return setGreet("Morning");
+    if (hrs === 1 || hrs < 17) return setGreet("Afternoon");
+    setGreet("Evening");
+  };
 
-  const handleOnSubmit = (title, desc) =>{
-    console.log(title, desc);
-  }
-  
+  const findNotes = async () => {
+    const result = await AsyncStorage.getItem("notes");
+    if (result !== null) setNotes(JSON.parse(result));
+  };
+
+  useEffect(() => {
+    findNotes();
+    findGreet();
+  }, []);
+
+  const handleOnSubmit = async (title, desc) => {
+    const note = { id: Date.now(), title, desc, time: Date.now() };
+    const updatedNotes = [...notes, note];
+    setNotes(updatedNotes);
+    await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
+  };
+
   return (
     <>
-      <StatusBar barStyle='dark-content' backgroundColor={colors.LIGHT}/>
-      <View style={styles.container}>
-      <Text style={styles.header}>{`Good ${greet} ${user.name}`}</Text>
-      <SearchBar containerStyle={{marginVertical:15}}/>
-      <View style={[StyleSheet.absoluteFillObject ,styles.emotyHeaderContainear]}>
-        <Text style={styles.emotyHeader}>Add Node</Text>
-        <RoundIconBtn onPress={()=>setModalVisiable(true)} antIconName='plus' style={styles.addbtn}/>
-      </View>
-      </View>
-      <NoteInputModal visible={modalVisiable} onClose={() => setModalVisiable(false)} onSubmit={handleOnSubmit}/>
-    </>
-  )
-}
+      <StatusBar barStyle="dark-content" backgroundColor={colors.LIGHT} />
+      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
 
-export default Home
+      <View style={styles.container}>
+        <Text style={styles.header}>{`Good ${greet} ${user.name}`}</Text>
+        {notes.length ? (
+          <SearchBar containerStyle={{ marginVertical: 15 }} />
+        ) : null}
+        <FlatList
+          numColumns={2}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+            marginBottom: 15,
+          }}
+          data={notes}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <Note item={item} />}
+        />
+        {!notes.length ? (
+          <View
+            style={[
+              StyleSheet.absoluteFillObject,
+              styles.emotyHeaderContainear,
+            ]}
+          >
+            <Text style={styles.emotyHeader}>Add Node</Text>
+          </View>
+        ) : null}
+        <RoundIconBtn
+          onPress={() => setModalVisiable(true)}
+          antIconName="plus"
+          style={styles.addbtn}
+        />
+      </View>
+      {/* </TouchableWithoutFeedback> */}
+      <NoteInputModal
+        visible={modalVisiable}
+        onClose={() => setModalVisiable(false)}
+        onSubmit={handleOnSubmit}
+      />
+    </>
+  );
+};
+
+export default Home;
 
 const styles = StyleSheet.create({
-  container:{
-    paddingHorizontal:20,
-    flex:1
+  container: {
+    paddingHorizontal: 20,
+    flex: 1,
+    zIndex: 1,
   },
-  header:{
-    fontSize:25,
-    fontWeight:'bold',
-    textTransform:'capitalize'
+  header: {
+    fontSize: 25,
+    fontWeight: "bold",
+    textTransform: "capitalize",
   },
-  emotyHeaderContainear:{
-    flex:1,
-    justifyContent:'center',
-    alignItems:'center',
-    zIndex:-1
+  emotyHeaderContainear: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: -1,
   },
-  emotyHeader:{
-    fontSize:30,
-    fontWeight:'bold',
-    opacity:.5
+  emotyHeader: {
+    fontSize: 30,
+    fontWeight: "bold",
+    opacity: 0.5,
   },
-  addbtn:{
-    position:'absolute',
-    right:30,
-    bottom:40
-  }
-})
+  addbtn: {
+    position: "absolute",
+    right: 30,
+    bottom: 40,
+  },
+});
