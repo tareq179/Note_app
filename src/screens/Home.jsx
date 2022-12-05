@@ -15,7 +15,7 @@ import NoteInputModal from "../components/NoteInputModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Note from "../components/Note";
 
-const Home = ({ user }) => {
+const Home = ({ user, navigation }) => {
   const [greet, setGreet] = useState("");
   const [modalVisiable, setModalVisiable] = useState(false);
   const [notes, setNotes] = useState([]);
@@ -44,10 +44,14 @@ const Home = ({ user }) => {
     await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
   };
 
+  const openNote = (note) => {
+    navigation.navigate('NoteDetails', {note})
+  }
+
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor={colors.LIGHT} />
-      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
       <View style={styles.container}>
         <Text style={styles.header}>{`Good ${greet} ${user.name}`}</Text>
@@ -62,7 +66,7 @@ const Home = ({ user }) => {
           }}
           data={notes}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <Note item={item} />}
+          renderItem={({ item }) => <Note onPress={() =>openNote(item)} item={item} />}
         />
         {!notes.length ? (
           <View
@@ -80,7 +84,7 @@ const Home = ({ user }) => {
           style={styles.addbtn}
         />
       </View>
-      {/* </TouchableWithoutFeedback> */}
+      </TouchableWithoutFeedback>
       <NoteInputModal
         visible={modalVisiable}
         onClose={() => setModalVisiable(false)}
