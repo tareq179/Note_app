@@ -17,6 +17,17 @@ import Note from "../components/Note";
 import { useNotes } from "../Contexts/NoteProvider";
 import NotFound from "../components/NotFound";
 
+const reverseData = (data) => {
+  return data.sort((a, b) => {
+    const aInt = parseInt(a.time);
+    const bInt = parseInt(b.time);
+    if (aInt < bInt) return 1;
+    if (aInt == bInt) return 0;
+    if (aInt > bInt) return -1;
+
+  })
+}
+
 const Home = ({ user, navigation }) => {
   const [greet, setGreet] = useState("");
   const [modalVisiable, setModalVisiable] = useState(false);
@@ -34,6 +45,8 @@ const Home = ({ user, navigation }) => {
   useEffect(() => {
     findGreet();
   }, []);
+
+  const reverseNotes = reverseData(notes)
 
   const handleOnSubmit = async (title, desc) => {
     const note = { id: Date.now(), title, desc, time: Date.now() };
@@ -96,7 +109,7 @@ const Home = ({ user, navigation }) => {
               justifyContent: "space-between",
               marginBottom: 15,
             }}
-            data={notes}
+            data={reverseNotes}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <Note onPress={() => openNote(item)} item={item} />
