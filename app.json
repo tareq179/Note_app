@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "note_app",
+    "name": "Note",
     "slug": "note_app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,11 +8,12 @@
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/1522a0d3-2a9c-470c-a703-501317b956b9"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -28,6 +29,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1522a0d3-2a9c-470c-a703-501317b956b9"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }

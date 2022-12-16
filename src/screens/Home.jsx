@@ -88,7 +88,7 @@ const Home = ({ user, navigation }) => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor={colors.LIGHT} />
-      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
       <View style={styles.container}>
         <Text style={styles.header}>{`Good ${greet} ${user.name}`}</Text>
@@ -132,7 +132,7 @@ const Home = ({ user, navigation }) => {
           style={styles.addbtn}
         />
       </View>
-      {/* </TouchableWithoutFeedback> */}
+      </TouchableWithoutFeedback>
       <NoteInputModal
         visible={modalVisiable}
         onClose={() => setModalVisiable(false)}
